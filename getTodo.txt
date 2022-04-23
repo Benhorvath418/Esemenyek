@@ -1,0 +1,13 @@
+//tesztelve
+module.exports = (objRep) => {
+    const { myModel } = objRep;
+    return (req, res, next) => {
+
+        const oneCar = myModel.findOne({ id: req.params.tid }) // Megkeressük azt az előfordulást findOne -> Egy eseményt ad vissza. Pl 2 db bevásárlás todom, akkor csak 1 bevasarlas todot adná vissza és nem mind a 2-őt.
+        if (!oneCar) {
+            return res.status(404).json({ Error: 'Nincs ilyen esemény' })
+        }
+        res.locals.todo = oneCar; // Ha létezik ilyen esemény, akkor a response-nak a locals paraméterében visszaadom a oneTodo-t és megyek tovább a next-el, mivel a route-omban a getTodoMW mellett van egy deleteTodoMW-m is.
+        return next();
+    }
+}
